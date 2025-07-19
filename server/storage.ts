@@ -175,7 +175,11 @@ export class MemStorage implements IStorage {
 
   async createPost(insertPost: InsertPost): Promise<Post> {
     const id = this.currentPostId++;
-    const post: Post = { ...insertPost, id };
+    const post: Post = { 
+      ...insertPost, 
+      id,
+      featured: insertPost.featured ?? false
+    };
     this.posts.set(id, post);
     return post;
   }
@@ -191,6 +195,7 @@ export class MemStorage implements IStorage {
     const comment: Comment = {
       ...insertComment,
       id,
+      postId: insertComment.postId ?? null,
       authorAvatar: `https://images.unsplash.com/photo-${Math.random() > 0.5 ? '1527980965255-d3b416303d12' : '1438761681033-6461ffad8d80'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60`,
       publishDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       likes: 0,

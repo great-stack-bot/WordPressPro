@@ -40,12 +40,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/posts/search", async (req, res) => {
     try {
       const { q } = req.query;
-      if (!q || typeof q !== 'string') {
-        return res.status(400).json({ message: "Search query is required" });
+      if (!q || typeof q !== 'string' || q.trim().length === 0) {
+        return res.json([]);
       }
-      const posts = await storage.searchPosts(q);
+      const posts = await storage.searchPosts(q.trim());
       res.json(posts);
     } catch (error) {
+      console.error("Error searching posts:", error);
       res.status(500).json({ message: "Failed to search posts" });
     }
   });
